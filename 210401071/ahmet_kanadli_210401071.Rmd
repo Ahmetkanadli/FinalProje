@@ -10,3 +10,8 @@ output:
 Şirketimiz "DataInsight Analytics" olarak veri alanında uzmanlaşmış bir analiz ve istatistik şirketidir. 2020 ve 2023 yılları arasında veri alanında çalışan profesyonellerin maaşlarını konum ve deneyim seviyelerine göre analiz ederek, gelecek yıllar için rekabetçi maaş politikalarını belirlemeyi hedefliyoruz. 
 
 Mevcut durumda, şirketimizin çalışanlarının maaşları konum ve deneyim seviyelerine göre belirlenirken, bu sürecin optimize edilmesi ve gelecek yıllar için daha etkili bir maaş politikasının oluşturulması gerekiyor. Bu, hem mevcut çalışanları memnun etmeyi hem de potansiyel yeni yetenekleri çekmeyi amaçlamaktadır.
+
+# Q2 : Proje Amacı
+
+[salary_data_analist](https://www.kaggle.com/datasets/willianoliveiragibin/salary-data-analist)
+Adlı Kaggle veri setini kullanarak 2020 ve 2023 yılları arasında veri alanında çalışan kişilerin, istihdam edildikleri şirketin konumları dikkate alınarak deneyim seviyelerine göre filtrelenmesi üzerine odaklanan bir senaryo planlıyoruz. Her yıl için deneyim seviyelerine göre alınan ortalama maaşlardaki artış veya azalış oranlarına dayanarak, bir sonraki yıl (2024) için meslek gruplarına verilmesi gereken maaş miktarlarını hesaplamayı amaçlıyoruz.
