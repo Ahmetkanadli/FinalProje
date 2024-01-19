@@ -10,3 +10,315 @@ output:
 Şirketimiz "DataInsight Analytics" olarak veri alanında uzmanlaşmış bir analiz ve istatistik şirketidir. 2020 ve 2023 yılları arasında veri alanında çalışan profesyonellerin maaşlarını konum ve deneyim seviyelerine göre analiz ederek, gelecek yıllar için rekabetçi maaş politikalarını belirlemeyi hedefliyoruz. 
 
 Mevcut durumda, şirketimizin çalışanlarının maaşları konum ve deneyim seviyelerine göre belirlenirken, bu sürecin optimize edilmesi ve gelecek yıllar için daha etkili bir maaş politikasının oluşturulması gerekiyor. Bu, hem mevcut çalışanları memnun etmeyi hem de potansiyel yeni yetenekleri çekmeyi amaçlamaktadır.
+
+# Q2 : Proje Amacı
+
+[salary_data_analist](https://www.kaggle.com/datasets/willianoliveiragibin/salary-data-analist)
+Adlı Kaggle veri setini kullanarak 2020 ve 2023 yılları arasında veri alanında çalışan kişilerin, istihdam edildikleri şirketin konumları dikkate alınarak deneyim seviyelerine göre filtrelenmesi üzerine odaklanan bir senaryo planlıyoruz. Her yıl için deneyim seviyelerine göre alınan ortalama maaşlardaki artış veya azalış oranlarına dayanarak, bir sonraki yıl (2024) için meslek gruplarına verilmesi gereken maaş miktarlarını hesaplamayı amaçlıyoruz.
+
+# Q3 : Veri Seti Keşifsel Analizi
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+filename <- "data_salary_analist.csv"
+library(readr)
+myDF <- read_csv(filename)
+head(myDF)
+ 
+```
+
+Veri seti Kaggle web sitesinden indirilmiştir ve **readr::read_csv()** fonksiyonu kullanılarak **`r class(myDF)[[1]]`** tipinde bir değişkene ithal edilmiştir. Veri boyutları aşağıdaki gibidir :
+
+- Satir sayisi : ```r nrow(myDF) ```
+- Satir sayisi : ```r ncol(myDF) ```
+
+Veri setinin ön görsellemesi aşağıda verilmiştir.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+myDF
+```
+
+Veri setini inceledeğimizde problem çözümü için kullanacağımız sütünlar work_year, experience,salary, in usd ,company
+burada work_year çalışılan yılı , experience deneyimi ,job_title ile meslek gurubu, in usd maaşın dolar cinsinde miktarı , company ise çalışılan şirketin konumunu temsil etmekdir. 
+
+Yıl verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+hist(myDF$work_year, breaks = 3 , main = "Year Distribution", xlab = "Year", ylab = "Frequency", col = "lightblue", border = "black")
+```
+
+Deneyim verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+experience2 <- as.factor(myDF$experience_level)
+
+frekans <- table(experience2)
+
+barplot(frekans, main = "Experience Distribution", xlab = "Experience", ylab = "Frequency", col = "lightblue", border = "black")
+
+
+```
+
+Maaş verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hist(myDF$salary_in_usd,breaks = 10, main = "Salary Distribution", xlab = "Salary", ylab = "Frequency", col = "lightblue", border = "black")
+
+```
+
+Meslek gurubu verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+job <- as.factor(myDF$job_title)
+
+job_frequence <- table(job)
+
+barplot(job_frequence, main = "Job Distribution",breaks = 5, xlab = "JOB", ylab = "Frequency", col = "lightblue", border = "black")
+
+
+
+```
+
+```{r test-that-3, eval=FALSE, echo=FALSE}
+testthat::test_file("tests/testthat/Q3_tests_ahmet_kanadli_210401071.R")
+```
+
+# Q4 : Veri Seti Ön işlemesi
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(dplyr)
+
+kur <- 30  #Güncel Dolar kuru
+
+# USD cinsinden maaş verisini TL'ye dönüştürme
+myDF$salary_in_usd <- myDF$salary_in_usd * kur
+
+# Belirli sütunları seçerek yeni bir tibble oluştur
+myTibble <- myDF %>%
+  select(work_year, experience_level, job_title, salary_in_usd) %>%
+  as_tibble()
+# sütünları double dan integer'a çevir
+myTibble <- myTibble %>%
+  mutate(across(c(work_year, salary_in_usd), as.integer))
+
+# Oluşturulan tibble'ı görüntüle
+head(myTibble)
+
+
+```
+Yukarıda 
+- CSV dosyasında salary_in_usd sütününda verilen maaş bilgileri için USD -> TL çevirimi yapıldı.
+- Veri işlemesi için Kullanacağımız sütünlar seçilip myTibble adlı değişkene atandı. 
+- Seçilen Sütünlar rahat işleme yapılabilmesi için factor tipine dönüştürüldü.
+işelmleri yapıldı.
+
+problem çözümünde kullanılacak olan sütünların son halinin ilk 5 değeri aşağıda ki çıktıda verilmiştir.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+head(myTibble)
+
+#testthat::test_file("tests/testthat/Q4_cevik_Yazilim_2023_Guz_Proje_test_ahmet_kanadli_210401071.R")
+```
+
+```{r test-that-4, eval=FALSE, echo=FALSE}
+testthat::test_file("tests/testthat/Q4_tests_ahmet_kanadli_210401071.R")
+```
+
+
+# Q5 : Veri Mühendisliği
+
+# Meslek gruplarına göre ortalama maaş çubuk grafiği
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+
+job_salary_mean <- myTibble %>%
+  group_by(job_title) %>%
+  summarize(mean_salary = mean(salary_in_usd, na.rm = TRUE))
+
+barplot(job_salary_mean$mean_salary, names.arg = job_salary_mean$job_title,
+        main = "Average Salary by Job Title",
+        xlab = "Job Title", ylab = "Average Salary (TL)",
+        col = "lightblue", border = "black")
+
+# Deneyim seviyelerine göre maaşların boxplot grafiği
+
+
+```
+
+# Deneyim seviyelerine göre maaşların boxplot grafiği
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+boxplot(salary_in_usd ~ experience_level, data = myTibble,
+        main = "Salary Distribution by Experience Level",
+        xlab = "Experience Level", ylab = "Salary (TL)",
+        col = "lightblue", border = "black")
+```
+
+# Deneyim seviyelerine göre ortalama ve medyan maaşlar
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# Deneyim seviyelerine göre ortalama ve medyan maaşlar
+experience_stats <- myTibble %>%
+  group_by(experience_level) %>%
+  summarize(mean_salary = mean(salary_in_usd, na.rm = TRUE),
+            median_salary = median(salary_in_usd, na.rm = TRUE))
+
+experience_stats
+
+```
+- Grafikte, maaşların deneyim seviyesi arttıkça arttığı görülmektedir. 
+
+- **EN**: Bu kategori, en düşük maaş dağılımına sahip görünüyor.
+- **EX**: Bu kategori, EN'den biraz daha yüksek bir maaş dağılımına sahip.
+- **MI**: Bu kategori, EX'den daha yüksek bir maaş dağılımına sahip.
+- **SE**: Bu kategori, grafikteki en yüksek maaş dağılımına sahip olanıdır.
+- Bu, bazı çalışanların deneyim seviyelerine göre beklenenden çok daha yüksek veya düşük maaş aldığını gösterir.
+
+#mesleklere göre maaş dağılmı
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+boxplot(salary_in_usd ~ job_title, data = myTibble,
+        main = "Salary Distribution by Job title",
+        xlab = "Job title", ylab = "Salary (TL)",
+        col = "lightblue", border = "black")
+
+#testthat::test_file("tests/testthat/Q5_cevik_yazilim_2023_Guz_Proje_test_ahmet_kanadli_210401071.R")
+```
+
+```{r test-that-5, eval=FALSE, echo=FALSE}
+testthat::test_file("tests/testthat/Q5_tests_ahmet_kanadli_210401071.R")
+````
+# Q6 Veri analizi
+
+
+İlk kod bloğu, 2024 yılı için her bir deneyim seviyesi, iş yılı ve meslek grubu kombinasyonu için maaş tahminleri oluşturuyor ve bu tahminleri bir veri çerçevesine kaydediyor. Bu veri çerçevesinde her bir kombinasyon için tahmin edilen maaşın yanı sıra alt ve üst tahmin aralıkları da bulunmaktadır.
+
+İkinci ve üçüncü kod blokları, tahmin edilen maaşları ve gerçek maaşları karşılaştırmak için kullanılır. İkinci blok, 2024 yılındaki deneyim seviyelerine göre meslek grupları arasındaki tahmini maaş değişikliklerini gösteren bir çubuk grafik oluşturur. Üçüncü blok ise gerçek ve tahmin edilen maaşlar arasındaki farkları meslek gruplarına göre gösteren bir çubuk grafik oluşturur.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+# Örnek bir modelin yerine, kullanılan modelinizi yerine koyun.
+example_model <- lm(salary_in_usd ~ experience_level + job_title, data = myTibble)
+
+# Tahmin yapmak için kullanılan kombinasyonları oluşturma
+combinations <- expand.grid(
+  experience_level = levels(factor(myTibble$experience_level)),
+  work_year = 2024,
+  job_title = levels(factor(myTibble$job_title))
+)
+
+# lapply ile tahmin yapma
+predictions_list <- lapply(1:nrow(combinations), function(i) {
+  new_data_combination <- combinations[i, ]
+  
+  # Tahmin yapma işlemi
+  prediction_combination <- predict(example_model, newdata = new_data_combination, interval = "prediction")
+  
+  data.frame(
+    job_title = new_data_combination$job_title,
+    work_year = 2024,
+    experience_level = new_data_combination$experience_level,
+    fit = prediction_combination[, 1],
+    lwr = prediction_combination[, 2],
+    upr = prediction_combination[, 3]
+  )
+})
+
+# Tahmin tablolarını birleştirme
+prediction_table_all <- do.call(rbind, predictions_list)
+
+# Tabloyu görüntüleme
+prediction_table_all
+
+```
+
+Aşağıdaki tablo da Meslek Guruplarınn deneyim seviyelerine göre guruplandırılarak üç yıldaki ortalama maaşları baz alınarak 2024 yılı için oluşturulan maaş tavsiyelerinin çubuk grafiğini görmekteyiz. 
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+
+# Verileri uygun bir formata getirme
+prediction_table_all$experience_level <- factor(prediction_table_all$experience_level, levels = c("EN", "EX", "MI", "SE"))
+
+# Çubuk grafik oluşturma
+ggplot(prediction_table_all, aes(x = experience_level, y = fit, fill = job_title)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Maaş Değişimi",
+       x = "Deneyim Seviyesi",
+       y = "Tahmini Maaş") +
+  theme_minimal()
+```
+
+Yukarda verilen grafik ile tahmin modelimizde elde ettiğimiz maaş grafikeri, Meslek gurupları ve deneyim seviyeleri baz alınarak bir önceki yıllarda alınanan maaşların ortalama grafiği birleştirilmiş şekilde verilmiştir. Böylece hangi guruplara ne kadar artış yapılması gerektiği net bir şekilde görülmektedir.  
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+# 'comparison_data' adında bir nesneyi oluşturun veya uygun bir veri çerçevesi atayın
+library(dplyr)
+# 'comparison_data' adında bir nesneyi oluşturun veya uygun bir veri çerçevesi atayın
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+
+# Örnek bir modelin yerine, kullanılan modelinizi yerine koyun.
+example_model <- lm(salary_in_usd ~ experience_level + job_title, data = myTibble)
+
+# Tahmin yapmak için kullanılan kombinasyonları oluşturma
+combinations <- expand.grid(
+  experience_level = levels(factor(myTibble$experience_level)),
+  work_year = 2024,
+  job_title = levels(factor(myTibble$job_title))
+)
+
+# lapply ile tahmin yapma
+predictions_list <- lapply(1:nrow(combinations), function(i) {
+  new_data_combination <- combinations[i, ]
+  
+  # Tahmin yapma işlemi
+  prediction_combination <- predict(example_model, newdata = new_data_combination, interval = "prediction")
+  
+  data.frame(
+    job_title = new_data_combination$job_title,
+    work_year = 2024,
+    experience_level = new_data_combination$experience_level,
+    fit = prediction_combination[, 1],
+    lwr = prediction_combination[, 2],
+    upr = prediction_combination[, 3]
+  )
+})
+
+# Tahmin tablolarını birleştirme
+prediction_table_all <- do.call(rbind, predictions_list)
+
+# Tabloyu görüntüleme
+
+
+# Verileri uygun bir formata getirme
+prediction_table_all$experience_level <- factor(prediction_table_all$experience_level, levels = c("EN", "EX", "MI", "SE"))
+
+# Çubuk grafik oluşturma
+bar_plot <- ggplot(prediction_table_all, aes(x = experience_level, y = fit, fill = job_title)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  labs(title = "Maaş Tahminleri",
+       x = "Deneyim Seviyesi",
+       y = "Tahmini Maaş") +
+  theme_minimal()
+
+# Meslek gruplarına göre ortalama maaşları oluşturma
+job_salary_mean <- myTibble %>%
+  group_by(job_title) %>%
+  summarize(mean_salary = mean(salary_in_usd, na.rm = TRUE))
+
+# Ortalama maaşları gösteren çubuk grafik
+mean_salary_plot <- ggplot(job_salary_mean, aes(x = job_title, y = mean_salary)) +
+  geom_bar(stat = "identity", fill = "lightblue", color = "black") +
+  labs(title = "Average Salary by Job Title",
+       x = "Job Title", y = "Average Salary (TL)") +
+  theme_minimal()
+
+# Grafikleri yan yana gösterme
+grid.arrange(mean_salary_plot, bar_plot, ncol = 2)
+
+
+#testthat::test_file("tests/testthat/Q6_cevik_Yazilim_2023_Guz_Proje_test_ahmet_kanadli_210401071.R")
+
+```
+
+```{r test-that-6, eval=FALSE, echo=FALSE}
+testthat::test_file("tests/testthat/Q6_tests_ahmet_kanadli_210401071.R")
+```
