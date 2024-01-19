@@ -1,0 +1,12 @@
+---
+title: "Proje Rapor : Ahmet Kanadlı"
+output:
+  html_document:
+     df_print: paged
+---
+
+# Q1 : Problem Tanımı
+
+Şirketimiz "DataInsight Analytics" olarak veri alanında uzmanlaşmış bir analiz ve istatistik şirketidir. 2020 ve 2023 yılları arasında veri alanında çalışan profesyonellerin maaşlarını konum ve deneyim seviyelerine göre analiz ederek, gelecek yıllar için rekabetçi maaş politikalarını belirlemeyi hedefliyoruz. 
+
+Mevcut durumda, şirketimizin çalışanlarının maaşları konum ve deneyim seviyelerine göre belirlenirken, bu sürecin optimize edilmesi ve gelecek yıllar için daha etkili bir maaş politikasının oluşturulması gerekiyor. Bu, hem mevcut çalışanları memnun etmeyi hem de potansiyel yeni yetenekleri çekmeyi amaçlamaktadır.
