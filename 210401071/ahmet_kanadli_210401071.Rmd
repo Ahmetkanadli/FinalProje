@@ -16,8 +16,6 @@ Mevcut durumda, şirketimizin çalışanlarının maaşları konum ve deneyim se
 [salary_data_analist](https://www.kaggle.com/datasets/willianoliveiragibin/salary-data-analist)
 Adlı Kaggle veri setini kullanarak 2020 ve 2023 yılları arasında veri alanında çalışan kişilerin, istihdam edildikleri şirketin konumları dikkate alınarak deneyim seviyelerine göre filtrelenmesi üzerine odaklanan bir senaryo planlıyoruz. Her yıl için deneyim seviyelerine göre alınan ortalama maaşlardaki artış veya azalış oranlarına dayanarak, bir sonraki yıl (2024) için meslek gruplarına verilmesi gereken maaş miktarlarını hesaplamayı amaçlıyoruz.
 
-
-
 # Q3 : Veri Seti Keşifsel Analizi
 
 ```{r echo=FALSE, message=FALSE, warning=FALSE}
@@ -83,9 +81,6 @@ barplot(job_frequence, main = "Job Distribution",breaks = 5, xlab = "JOB", ylab 
 testthat::test_file("tests/testthat/Q3_tests_ahmet_kanadli_210401071.R")
 ```
 
-
-
-
 # Q4 : Veri Seti Ön işlemesi
 
 
@@ -127,6 +122,7 @@ head(myTibble)
 ```{r test-that-4, eval=FALSE, echo=FALSE}
 testthat::test_file("tests/testthat/Q4_tests_ahmet_kanadli_210401071.R")
 ```
+
 
 # Q5 : Veri Mühendisliği
 
@@ -187,12 +183,7 @@ boxplot(salary_in_usd ~ job_title, data = myTibble,
 
 ```{r test-that-5, eval=FALSE, echo=FALSE}
 testthat::test_file("tests/testthat/Q5_tests_ahmet_kanadli_210401071.R")
-```
-- Data Architect grubu en yüksek maaş alan gruptur. Bu grup, diğer iş unvanlarına göre daha yüksek bir maaş dağılımına sahiptir. Bu, Data Architect pozisyonunun genellikle daha yüksek bir maaş beklentisi olduğunu gösterir.
-
-
-
-
+````
 # Q6 Veri analizi
 
 
@@ -332,6 +323,7 @@ grid.arrange(mean_salary_plot, bar_plot, ncol = 2)
 testthat::test_file("tests/testthat/Q6_tests_ahmet_kanadli_210401071.R")
 ```
 
+
 Bu Grafiklere bakarak her MEslek gurubunun her deneyim seviyesi için etkin bir maaş artışının söz konusu olduğunu görmekteyiz.
 
 
@@ -361,4 +353,3 @@ Analizimizin güçlü yanları arasında veri setinin uygun seçimi, doğru ön 
 İyileştirme ve İlerletme Tavsiyeleri:
 
 Bu çalışmayı ileride iyileştirmek ve ilerletmek isteyenlere önerilerimiz arasında, daha kapsamlı bir veri seti kullanımı, farklı modellerin denenmesi ve daha fazla öznitelik dikkate alınması yer alabilir. Ayrıca, müşteri geribildirimleri ile çalışmanın gerçek dünya uygulanabilirliğini artırabilirsiniz.
-
