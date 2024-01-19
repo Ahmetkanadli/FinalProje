@@ -10,3 +10,73 @@ output:
 Şirketimiz "DataInsight Analytics" olarak veri alanında uzmanlaşmış bir analiz ve istatistik şirketidir. 2020 ve 2023 yılları arasında veri alanında çalışan profesyonellerin maaşlarını konum ve deneyim seviyelerine göre analiz ederek, gelecek yıllar için rekabetçi maaş politikalarını belirlemeyi hedefliyoruz. 
 
 Mevcut durumda, şirketimizin çalışanlarının maaşları konum ve deneyim seviyelerine göre belirlenirken, bu sürecin optimize edilmesi ve gelecek yıllar için daha etkili bir maaş politikasının oluşturulması gerekiyor. Bu, hem mevcut çalışanları memnun etmeyi hem de potansiyel yeni yetenekleri çekmeyi amaçlamaktadır.
+
+# Q2 : Proje Amacı
+
+[salary_data_analist](https://www.kaggle.com/datasets/willianoliveiragibin/salary-data-analist)
+Adlı Kaggle veri setini kullanarak 2020 ve 2023 yılları arasında veri alanında çalışan kişilerin, istihdam edildikleri şirketin konumları dikkate alınarak deneyim seviyelerine göre filtrelenmesi üzerine odaklanan bir senaryo planlıyoruz. Her yıl için deneyim seviyelerine göre alınan ortalama maaşlardaki artış veya azalış oranlarına dayanarak, bir sonraki yıl (2024) için meslek gruplarına verilmesi gereken maaş miktarlarını hesaplamayı amaçlıyoruz.
+
+# Q3 : Veri Seti Keşifsel Analizi
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+filename <- "data_salary_analist.csv"
+library(readr)
+myDF <- read_csv(filename)
+head(myDF)
+ 
+```
+
+Veri seti Kaggle web sitesinden indirilmiştir ve **readr::read_csv()** fonksiyonu kullanılarak **`r class(myDF)[[1]]`** tipinde bir değişkene ithal edilmiştir. Veri boyutları aşağıdaki gibidir :
+
+- Satir sayisi : ```r nrow(myDF) ```
+- Satir sayisi : ```r ncol(myDF) ```
+
+Veri setinin ön görsellemesi aşağıda verilmiştir.
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+myDF
+```
+
+Veri setini inceledeğimizde problem çözümü için kullanacağımız sütünlar work_year, experience,salary, in usd ,company
+burada work_year çalışılan yılı , experience deneyimi ,job_title ile meslek gurubu, in usd maaşın dolar cinsinde miktarı , company ise çalışılan şirketin konumunu temsil etmekdir. 
+
+Yıl verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+hist(myDF$work_year, breaks = 3 , main = "Year Distribution", xlab = "Year", ylab = "Frequency", col = "lightblue", border = "black")
+```
+
+Deneyim verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+experience2 <- as.factor(myDF$experience_level)
+
+frekans <- table(experience2)
+
+barplot(frekans, main = "Experience Distribution", xlab = "Experience", ylab = "Frequency", col = "lightblue", border = "black")
+
+
+```
+
+Maaş verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+hist(myDF$salary_in_usd,breaks = 10, main = "Salary Distribution", xlab = "Salary", ylab = "Frequency", col = "lightblue", border = "black")
+
+```
+
+Meslek gurubu verilerinin dağılımı aşağıdaki histogramda gösterilmiştir.
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+
+job <- as.factor(myDF$job_title)
+
+job_frequence <- table(job)
+
+barplot(job_frequence, main = "Job Distribution",breaks = 5, xlab = "JOB", ylab = "Frequency", col = "lightblue", border = "black")
+
+
+
+```
+
+```{r test-that-3, eval=FALSE, echo=FALSE}
+testthat::test_file("tests/testthat/Q3_tests_ahmet_kanadli_210401071.R")
+```
